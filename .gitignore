@@ -1,6 +1,7 @@
 # CUSTOM
 emailMassSenderEnv
 *.xlsx
+oauth2_creds.json
 
 # STANDARD
 # Editors
