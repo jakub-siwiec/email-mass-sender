@@ -17,5 +17,5 @@ load_dotenv(dotenv_path=PATH_ENV)
 
 # Sending emails
 gmail_send = Gmailsend(os.getenv("GMAIL_EMAIL"),
-                       "siwiec.jak@gmail.com", "Test", "Test content")
+                       os.getenv("GMAIL_EXPERIMENT_SENDER"), "Test", "Test content")
 gmail_send.send()
