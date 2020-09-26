@@ -8,7 +8,7 @@ class Spreadsheet:
         Args:
             xlsx_path (string): Path to xlsx file
         """
-        self.xlsx_file = pd.read_excel(xlsx_path).values
+        self.xlsx_file = pd.read_excel(xlsx_path)
 
     def get_xlsx_data(self):
         """Getting values from Excel spreadsheet
