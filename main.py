@@ -18,13 +18,14 @@ PATH_EMAIL_BODY = Path(Path.cwd(), "assets",
 PATH_EMAIL_ATTACHMENT = Path(Path.cwd(), "assets",
                              "attachments", os.getenv("ATTACHMENT_NAME"))
 
-# Load data from .xlsx file
+# Loading data from .xlsx file
 xlsx_file = Spreadsheet(PATH_XLSX)
-xlsx_data = xlsx_file.get_xlsx_data()
 
-# Sending emails
-gmail_send = Gmailsend(os.getenv("GMAIL_EMAIL"))
+# Loading template from HTML file
 email_template = Emailtemplate(
     PATH_EMAIL_TITLE, PATH_EMAIL_BODY)
 
-bulk_sending(xlsx_data, gmail_send, email_template, str(PATH_EMAIL_ATTACHMENT))
+# Sending emails
+gmail_send = Gmailsend(os.getenv("GMAIL_EMAIL"), os.getenv("GMAIL_ALIAS"))
+
+bulk_sending(xlsx_file, gmail_send, email_template, str(PATH_EMAIL_ATTACHMENT))
