@@ -2,30 +2,29 @@ import yagmail
 
 
 class Gmailsend():
-    def __init__(self, user_email, email_to, email_subject, email_contents):
-        """Object of email sending. It should generate oauth2_creds.json file for authentication.
+    def __init__(self, user_email):
+        """Gmail email sender. Constructor for initialising server connection and authentication
 
         Args:
-            user_email (string): Message sender
-            email_to (string): Message receiver
-            email_subject (string): Title of the email
-            email_contents (string): Content of the email
+            user_email (string): Email from which the message will be sent
         """
         self.user_email = user_email
-        self.email_to = email_to
-        self.email_subject = email_subject
-        self.email_contents = email_contents
+        # initializing the server connection
+        self.yag = yagmail.SMTP(user=self.user_email,
+                                oauth2_file="oauth2_creds.json")
 
-    def send(self):
-        """Sending the email using yagmail library.
+    def send(self, email_to, email_subject, email_contents):
+        """Sending an email
+
+        Args:
+            email_to (string): Message receiver
+            email_subject (string): Message title
+            email_contents (string): Message content
         """
         try:
-            # initializing the server connection
-            yag = yagmail.SMTP(user=self.user_email,
-                               oauth2_file="oauth2_creds.json")
             # sending the email
-            yag.send(to=self.email_to, subject=self.email_subject,
-                     contents=self.email_contents)
+            self.yag.send(to=email_to, subject=email_subject,
+                          contents=email_contents)
             print("Email sent successfully")
         except:
             print("Error, email was not sent")

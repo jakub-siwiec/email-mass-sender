@@ -16,6 +16,5 @@ print(xlsx_data)
 load_dotenv(dotenv_path=PATH_ENV)
 
 # Sending emails
-gmail_send = Gmailsend(os.getenv("GMAIL_EMAIL"),
-                       os.getenv("GMAIL_EXPERIMENT_SENDER"), "Test", "Test content")
-gmail_send.send()
+gmail_send = Gmailsend(os.getenv("GMAIL_EMAIL"))
+gmail_send.send(os.getenv("GMAIL_EXPERIMENT_SENDER"), "Test", "Test content")
