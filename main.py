@@ -4,6 +4,7 @@ import os
 from subfiles.xlsxreader import Spreadsheet
 from subfiles.gmailsend import Gmailsend
 from subfiles.emailtemplateextractor import Emailtemplate
+from subfiles.emailfinder import Emailfinder
 from subfiles.bulksend import bulk_sending
 
 PATH_ENV = Path(Path.cwd(), "envkeysfiles", ".env")
@@ -25,7 +26,11 @@ xlsx_file = Spreadsheet(PATH_XLSX)
 email_template = Emailtemplate(
     PATH_EMAIL_TITLE, PATH_EMAIL_BODY)
 
+# Loading email address finding details
+email_finder = Emailfinder(str(os.getenv("HUNTER_API_KEY")))
+
 # Sending emails
 gmail_send = Gmailsend(os.getenv("GMAIL_EMAIL"), os.getenv("GMAIL_ALIAS"))
 
-bulk_sending(xlsx_file, gmail_send, email_template, str(PATH_EMAIL_ATTACHMENT))
+bulk_sending(xlsx_file, gmail_send, email_template,
+             str(PATH_EMAIL_ATTACHMENT), email_finder)
