@@ -22,6 +22,12 @@ class Spreadsheet:
         return self.xlsx_file_pd
 
     def add_to_row(self, row_number, text):
+        """Adding the value in the last column of the row in Excel spreadsheet. This function is intended to print result of email sending.
+
+        Args:
+            row_number (int): The number of the row in the Excel spreadsheet we want to insert value to. The first row has number 0 and is used for columns labales. Start with 1 for the first value.
+            text (string): The value to insert in the cell in Excel spreadsheet.
+        """
         workbook = self.xlsx_file_op.active
         workbook.cell(column=workbook.max_column,
                       row=row_number+1, value=text)
