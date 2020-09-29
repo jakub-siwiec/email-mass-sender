@@ -1,4 +1,3 @@
-
 class Bulksending:
     def __init__(self, xlsx_file, gmail_send, email_finder, email_templates, attachment_location=None):
         """ Sending bulk emails class
@@ -17,44 +16,68 @@ class Bulksending:
         self.email_templates = email_templates
         self.attachment_location = attachment_location
 
-    def __personalising_template_title(self, item):
-        """ Choosing right template and replacing the variables in the title template.
+    def __personal_or_general_template(self, item):
+        """ Chooses personal or general template. If 1 in Excel then then it is personal.
 
         Args:
             item (tuple): Tuple from pandas DataFrame.
 
         Returns:
-            string: Final title template text.
+            template object: Template object which is personal or general
         """
-        email_template_title = ""
-        print(item[1].personal)
-
         if item[1].personal == 1 or item[1].personal == "1":
-            email_template_title = self.email_templates.personal(
-            ).get_template_title().replace("{company}", item[1].company)
+            return self.email_templates.personal()
         else:
-            email_template_title = self.email_templates.general(
-            ).get_template_title().replace("{company}", item[1].company)
+            return self.email_templates.general()
+
+    def __template_title_variable_personalisation(self, item):
+        """ Personalising template title with the variables values.
+
+        Args:
+            item (tuple): Tuple from pandas DataFrame.
+
+        Returns:
+            string: Email template title
+        """
+        email_template_title = self.__personal_or_general_template(
+            item).get_template_title()
+        template_title_variables = self.__personal_or_general_template(
+            item).get_template_title_variables()
+        excel_headers_variables = self.xlsx_file.get_headers_list()
+
+        # Getting common values in two arrays
+        common_variables_list = list(set(template_title_variables).intersection(
+            set(excel_headers_variables)))
+
+        for variable in common_variables_list:
+            email_template_title = email_template_title.replace(
+                "{{" + str(variable) + "}}", item[1][str(variable)])
 
         return email_template_title
 
-    def __personalising_template_body(self, item):
-        """ Choosing right template and replacing the variables in the body template.
+    def __template_body_variable_personalisation(self, item):
+        """ Personalising template body with the variables values.
 
         Args:
             item (tuple): Tuple from pandas DataFrame.
 
         Returns:
-            string: Final body template text.
+            string: Email template body
         """
-        email_template_body = ""
 
-        if item[1].personal == 1 or item[1].personal == "1":
-            email_template_body = self.email_templates.personal(
-            ).get_template_body().replace("{first_name}", item[1].first_name).replace("{company}", item[1].company)
-        else:
-            email_template_body = self.email_templates.general(
-            ).get_template_body().replace("{company}", item[1].company)
+        email_template_body = self.__personal_or_general_template(
+            item).get_template_body()
+        template_body_variables = self.__personal_or_general_template(
+            item).get_template_body_variables()
+        excel_headers_variables = self.xlsx_file.get_headers_list()
+
+        # Getting common values in two arrays
+        common_variables_list = list(set(template_body_variables).intersection(
+            set(excel_headers_variables)))
+
+        for variable in common_variables_list:
+            email_template_body = email_template_body.replace(
+                "{{" + str(variable) + "}}", item[1][str(variable)])
 
         return email_template_body
 
@@ -97,8 +120,10 @@ class Bulksending:
             array: Array of boolean values. True if email sent successfully, False if email sending failed.
         """
         result = []
-        email_template_title = self.__personalising_template_title(item)
-        email_template_body = self.__personalising_template_body(item)
+        email_template_title = self.__template_title_variable_personalisation(
+            item)
+        email_template_body = self.__template_body_variable_personalisation(
+            item)
         result.append(self.gmail_send.send(email_address, email_template_title,
                                            email_template_body, self.attachment_location))
         return result
@@ -113,8 +138,10 @@ class Bulksending:
             array: Array of boolean values. True if email sent successfully, False if email sending failed.
         """
         result = []
-        email_template_title = self.__personalising_template_title(item)
-        email_template_body = self.__personalising_template_body(item)
+        email_template_title = self.__template_title_variable_personalisation(
+            item)
+        email_template_body = self.__template_body_variable_personalisation(
+            item)
         for address in self.email_finder.email_guesser_list():
             result.append(self.gmail_send.send(address, email_template_title,
                                                email_template_body, self.attachment_location))

@@ -14,7 +14,7 @@ def main():
     input_value = input(
         "\nPlease double check the correctness of Excel spreadsheet and email template.\nAre you sure you want to continue (Y/N)?\n")
 
-    print("\n")
+    print("")
 
     if (input_value == "Y" or input_value == "y"):
         # Path to env keys

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from openpyxl import load_workbook
 
 
@@ -20,6 +21,9 @@ class Spreadsheet:
             [array]: Arrays of spreadsheet rows
         """
         return self.xlsx_file_pd
+
+    def get_headers_list(self):
+        return self.xlsx_file_pd.columns.values.tolist()
 
     def add_to_row(self, row_number, text):
         """Adding the value in the last column of the row in Excel spreadsheet. This function is intended to print result of email sending.

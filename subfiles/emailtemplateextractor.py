@@ -1,3 +1,6 @@
+import re
+
+
 class Emailtemplate:
     def __init__(self, location_title, location_body):
         """Loading email templates for title and body from another files
@@ -10,6 +13,28 @@ class Emailtemplate:
         self.email_title_string = self.email_title_file.read()
         self.email_body_file = open(location_body, 'r')
         self.email_body_string = self.email_body_file.read()
+        # Lists of strings between curly braces {{}}
+        self.email_title_variables = re.findall(
+            "(?<=\{{)(.*?)(?=\}})", self.email_title_string)
+        self.email_body_variables = re.findall(
+            "(?<=\{{)(.*?)(?=\}})", self.email_body_string)
+
+    def get_template_title_variables(self):
+        """ Get an array of variables in .html file for title. Variables are sorrounded by double curly braces e.g. {{variable}}.
+
+        Returns:
+            array: Array of the variables in the title file.
+        """
+        return self.email_title_variables
+
+    def get_template_body_variables(self):
+        """ Get an array of variables in .html file for body. Variables are sorrounded by double curly braces e.g. {{variable}}.
+
+        Returns:
+            array: Array of the variables in the body file.
+        """
+
+        return self.email_body_variables
 
     def get_template_title(self):
         """Template title getter.
