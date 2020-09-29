@@ -1,24 +1,24 @@
 
 class Bulksending:
-    def __init__(self, xlsx_file, gmail_send, email_finder, email_template, attachment_location=None):
+    def __init__(self, xlsx_file, gmail_send, email_finder, email_templates, attachment_location=None):
         """ Sending bulk emails class
 
         Args:
             xlsx_file (Spreadsheet object): Spreadsheet object.
             gmail_send (Gmailsend object): Gmailsend object.
             email_finder (Email finder object): Emailfinder object.
-            email_template (Emailtemplate object): Emailtemplate object
+            email_templates (Templatescontainer object): Templatescontainer object
             attachment_location (string, optional): String path to the attachment. Defaults to None.
         """
         self.xlsx_file = xlsx_file
         self.xlsx_data = self.xlsx_file.get_xlsx_data()
         self.gmail_send = gmail_send
         self.email_finder = email_finder
-        self.email_template = email_template
+        self.email_templates = email_templates
         self.attachment_location = attachment_location
 
     def __personalising_template_title(self, item):
-        """ Replacing the variables in the title template.
+        """ Choosing right template and replacing the variables in the title template.
 
         Args:
             item (tuple): Tuple from pandas DataFrame.
@@ -26,10 +26,20 @@ class Bulksending:
         Returns:
             string: Final title template text.
         """
-        return self.email_template.get_template_title().replace("{company}", item[1].company)
+        email_template_title = ""
+        print(item[1].personal)
+
+        if item[1].personal == 1 or item[1].personal == "1":
+            email_template_title = self.email_templates.personal(
+            ).get_template_title().replace("{company}", item[1].company)
+        else:
+            email_template_title = self.email_templates.general(
+            ).get_template_title().replace("{company}", item[1].company)
+
+        return email_template_title
 
     def __personalising_template_body(self, item):
-        """ Replacing the variables in the body template.
+        """ Choosing right template and replacing the variables in the body template.
 
         Args:
             item (tuple): Tuple from pandas DataFrame.
@@ -37,7 +47,16 @@ class Bulksending:
         Returns:
             string: Final body template text.
         """
-        return self.email_template.get_template_body().replace("{first_name}", item[1].first_name).replace("{company}", item[1].company)
+        email_template_body = ""
+
+        if item[1].personal == 1 or item[1].personal == "1":
+            email_template_body = self.email_templates.personal(
+            ).get_template_body().replace("{first_name}", item[1].first_name).replace("{company}", item[1].company)
+        else:
+            email_template_body = self.email_templates.general(
+            ).get_template_body().replace("{company}", item[1].company)
+
+        return email_template_body
 
     def __is_email_not_nan(self, item):
         """ Checking whether email_address field in Excel spreadsheet is empty (nan).

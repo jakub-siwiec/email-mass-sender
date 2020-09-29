@@ -15,11 +15,17 @@ DATABASE_FILE_NAME
 // A full name (including extension such as .pdf) of the attachment file
 ATTACHMENT_FILE_NAME
 
-// A full name (including .html extension) of the title template file
-EMAIL_TITLE_FILE_NAME
+// A full name (including .html extension) of the title template file to use for an unknown recipient
+GENERAL_EMAIL_TITLE_FILE_NAME
 
-// A full name (including .html extension) of the body template file
-EMAIL_BODY_FILE_NAME
+// A full name (including .html extension) of the body template file to use for an unknown recipient
+GENERAL_EMAIL_BODY_FILE_NAME
+
+// A full name (including .html extension) of the title template file to use for a known recipient
+PERSONAL_EMAIL_TITLE_FILE_NAME
+
+// A full name (including .html extension) of the body template file to use for a known recipient
+PERSONAL_EMAIL_BODY_FILE_NAME
 
 // Hunter API key which can be obtained from Hunter.io account
 HUNTER_API_KEY
